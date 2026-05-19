@@ -4647,8 +4647,10 @@ function syncToCloud(payload){
     if(r.ok){
       var ind=document.getElementById('save-ind');
       if(ind){ind.textContent='☁ salvo na nuvem';ind.style.opacity='1';clearTimeout(ind._t);ind._t=setTimeout(function(){ind.style.opacity='0';},2500);}
-    } else { console.warn('JSONBin save error',r.status); }
-  }).catch(function(e){_jbSaving=false;console.warn('JSONBin save failed',e);});
+    } else {
+      r.text().then(function(t){console.warn('JSONBin save error HTTP '+r.status+':',t);});
+    }
+  }).catch(function(e){_jbSaving=false;console.warn('JSONBin save failed:',e);});
 }
 function loadFromCloud(onSuccess,onFail){
   fetch(JSONBIN_URL+'/latest',{
