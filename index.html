@@ -141,6 +141,7 @@
             }, '*');
           } else if (event.data.type === 'claudeComplete') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -149,6 +150,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'proxyFetchResponse') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
               callbacksMap.delete(event.data.id);
@@ -187,6 +189,7 @@
             }
           } else if (event.data.type === 'storageGet') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -195,6 +198,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageSet') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -203,6 +207,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageDelete') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -211,6 +216,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageList') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -428,6 +434,7 @@
             }, '*');
           } else if (event.data.type === 'claudeComplete') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -436,6 +443,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'proxyFetchResponse') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
               callbacksMap.delete(event.data.id);
@@ -474,6 +482,7 @@
             }
           } else if (event.data.type === 'storageGet') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -482,6 +491,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageSet') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -490,6 +500,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageDelete') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -498,6 +509,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageList') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -717,6 +729,7 @@
             }, '*');
           } else if (event.data.type === 'claudeComplete') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -725,6 +738,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'proxyFetchResponse') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
               callbacksMap.delete(event.data.id);
@@ -763,6 +777,7 @@
             }
           } else if (event.data.type === 'storageGet') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -771,6 +786,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageSet') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -779,6 +795,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageDelete') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
@@ -787,6 +804,7 @@
             callbacksMap.delete(event.data.id);
           } else if (event.data.type === 'storageList') {
             const callback = callbacksMap.get(event.data.id);
+            if (!callback) return;
             if (event.data.error) {
               callback.reject(new Error(event.data.error));
             } else {
