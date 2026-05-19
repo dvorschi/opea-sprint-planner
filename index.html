@@ -4662,7 +4662,7 @@ function persistState(){
   var payload=JSON.stringify(getPlannerState());
   try{localStorage.setItem(STORAGE_KEY,payload);}catch(e){}
   try{
-    if(window.storage && window.storage.set){window.storage.set(STORAGE_KEY,payload).catch(function(){});}
+    try{if(typeof window.storage!=='undefined'&&window.storage&&typeof window.storage.set==='function'){window.storage.set(STORAGE_KEY,payload).catch(function(){});}}catch(e){}
   }catch(e){}
   setEmbeddedState();
   // Sincronizar com JSONBin (nuvem compartilhada)
@@ -4735,7 +4735,7 @@ function load(){
   }, function(){
     // JSONBin falhou — fallback para storages locais
     // 1. Tentar window.storage (artefato Claude — alteracoes do usuario)
-  if(typeof window.storage!=='undefined' && window.storage.get){
+  if(typeof window.storage!=='undefined' && window.storage && typeof window.storage.get==='function'){
     window.storage.get(STORAGE_KEY).then(function(result){
       var loaded=false;
       if(result&&result.value){
@@ -5112,7 +5112,7 @@ function gerarGantt(){
 
 function resetData(){
   _customConfirm('Restaurar para o ponto de referência do projeto?\nTodas as alterações manuais serão desfeitas.', function(){
-    try{window.storage.delete(STORAGE_KEY).catch(function(){});}catch(e){}
+    try{if(typeof window.storage!=='undefined'&&window.storage&&typeof window.storage.delete==='function'){window.storage.delete(STORAGE_KEY).catch(function(){});}}catch(e){}
     data=JSON.parse(JSON.stringify(DEFAULT_DATA));
     velocity=JSON.parse(JSON.stringify(DEFAULT_VEL));
     MODULES.length=0; JSON.parse(JSON.stringify(DEFAULT_MODS)).forEach(function(m){MODULES.push(m);});
