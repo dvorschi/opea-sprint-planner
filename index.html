@@ -4629,39 +4629,32 @@ let data = {
 const DEFAULT_DATA = JSON.parse(JSON.stringify(data));
 
 const STORAGE_KEY='opea_planner_state_json_layout_v3';
-// JSONBin — sincronização em nuvem
-var JSONBIN_ID='6a0cdd43ee5a733b12e8395a';
-var JSONBIN_MASTER_KEY='$2a$10$qOcx0mN2buWKRjgad6/vSOhGW4.BqbICBKFLqE81m2uAMUXEfz/kG';
-var JSONBIN_ACCESS_KEY='$2a$10$q1PoSoADtNpVJbU/JXF/jOaek4JAnFiIagnL91dqkAHUHnVu.ZIY2';
-var JSONBIN_URL='https://api.jsonbin.io/v3/b/'+JSONBIN_ID;
+// Cloudflare Worker — sincronização em nuvem
+var CLOUD_URL='https://opea-api.mandaprovitor.workers.dev';
 function syncToCloud(payload){
   // Debounce: cancelar timer anterior e agendar novo envio em 800ms
   if(window._jbTimer) clearTimeout(window._jbTimer);
   window._jbTimer = setTimeout(function(){
     window._jbTimer = null;
-    console.log('Enviando para JSONBin:', JSONBIN_URL);
-    fetch(JSONBIN_URL,{
+    fetch(CLOUD_URL,{
       method:'PUT',
-      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_MASTER_KEY,'X-Access-Key':JSONBIN_ACCESS_KEY},
+      headers:{'Content-Type':'application/json'},
       body:payload
     }).then(function(r){
-      console.log('JSONBin resposta HTTP:', r.status);
       if(r.ok){
         var ind=document.getElementById('save-ind');
         if(ind){ind.textContent='☁ salvo na nuvem';ind.style.opacity='1';clearTimeout(ind._t);ind._t=setTimeout(function(){ind.style.opacity='0';},2500);}
       } else {
-        r.text().then(function(t){console.warn('JSONBin save error HTTP '+r.status+':',t);});
+        r.text().then(function(t){console.warn('Cloud save error HTTP '+r.status+':',t);});
       }
-    }).catch(function(e){console.warn('JSONBin save failed:',e);});
+    }).catch(function(e){console.warn('Cloud save failed:',e);});
   }, 800);
 }
 function loadFromCloud(onSuccess,onFail){
-  fetch(JSONBIN_URL+'/latest',{
-    headers:{'X-Master-Key':JSONBIN_MASTER_KEY,'X-Access-Key':JSONBIN_ACCESS_KEY}
-  }).then(function(r){return r.ok?r.json():Promise.reject(r.status);})
+  fetch(CLOUD_URL,{method:'GET'})
+  .then(function(r){return r.ok?r.json():Promise.reject(r.status);})
   .then(function(j){
-    var rec=j.record||j;
-    if(rec&&rec.data&&rec.data.sprints)onSuccess(rec);
+    if(j&&j.data&&j.data.sprints)onSuccess(j);
     else onFail();
   }).catch(function(){onFail();});
 }
