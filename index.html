@@ -4634,26 +4634,26 @@ var JSONBIN_ID='6a0cdd43ee5a733b12e8395a';
 var JSONBIN_MASTER_KEY='$2a$10$qOcx0mN2buWKRjgad6/vSOhGW4.BqbICBKFLqE81m2uAMUXEfz/kG';
 var JSONBIN_ACCESS_KEY='$2a$10$q1PoSoADtNpVJbU/JXF/jOaek4JAnFiIagnL91dqkAHUHnVu.ZIY2';
 var JSONBIN_URL='https://api.jsonbin.io/v3/b/'+JSONBIN_ID;
-var _jbSaving=false;
 function syncToCloud(payload){
-  console.log('syncToCloud chamado, _jbSaving='+_jbSaving);
-  if(_jbSaving){console.warn('syncToCloud bloqueado por _jbSaving');return;}
-  _jbSaving=true;
-  console.log('Enviando para JSONBin:', JSONBIN_URL);
-  fetch(JSONBIN_URL,{
-    method:'PUT',
-    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_MASTER_KEY,'X-Access-Key':JSONBIN_ACCESS_KEY},
-    body:payload
-  }).then(function(r){
-    _jbSaving=false;
-    console.log('JSONBin resposta HTTP:', r.status);
-    if(r.ok){
-      var ind=document.getElementById('save-ind');
-      if(ind){ind.textContent='☁ salvo na nuvem';ind.style.opacity='1';clearTimeout(ind._t);ind._t=setTimeout(function(){ind.style.opacity='0';},2500);}
-    } else {
-      r.text().then(function(t){console.warn('JSONBin save error HTTP '+r.status+':',t);});
-    }
-  }).catch(function(e){_jbSaving=false;console.warn('JSONBin save failed:',e);});
+  // Debounce: cancelar timer anterior e agendar novo envio em 800ms
+  if(window._jbTimer) clearTimeout(window._jbTimer);
+  window._jbTimer = setTimeout(function(){
+    window._jbTimer = null;
+    console.log('Enviando para JSONBin:', JSONBIN_URL);
+    fetch(JSONBIN_URL,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_MASTER_KEY,'X-Access-Key':JSONBIN_ACCESS_KEY},
+      body:payload
+    }).then(function(r){
+      console.log('JSONBin resposta HTTP:', r.status);
+      if(r.ok){
+        var ind=document.getElementById('save-ind');
+        if(ind){ind.textContent='☁ salvo na nuvem';ind.style.opacity='1';clearTimeout(ind._t);ind._t=setTimeout(function(){ind.style.opacity='0';},2500);}
+      } else {
+        r.text().then(function(t){console.warn('JSONBin save error HTTP '+r.status+':',t);});
+      }
+    }).catch(function(e){console.warn('JSONBin save failed:',e);});
+  }, 800);
 }
 function loadFromCloud(onSuccess,onFail){
   fetch(JSONBIN_URL+'/latest',{
