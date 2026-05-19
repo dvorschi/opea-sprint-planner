@@ -4680,7 +4680,7 @@ function persistState(){
   var payload=JSON.stringify(getPlannerState());
   try{localStorage.setItem(STORAGE_KEY,payload);}catch(e){}
   try{
-    try{if(typeof window.storage!=='undefined'&&window.storage&&typeof window.storage.set==='function'){window.storage.set(STORAGE_KEY,payload).catch(function(){});}}catch(e){}
+
   }catch(e){}
   setEmbeddedState();
   // Sincronizar com JSONBin (nuvem compartilhada)
@@ -4751,37 +4751,7 @@ function load(){
     // Cloud não é mais recente — usar embedded
     applyEmbedded();
   }, function(){
-    // JSONBin falhou — fallback para storages locais
-    // 1. Tentar window.storage (artefato Claude — alteracoes do usuario)
-  if(typeof window.storage!=='undefined' && window.storage && typeof window.storage.get==='function'){
-    window.storage.get(STORAGE_KEY).then(function(result){
-      var loaded=false;
-      if(result&&result.value){
-        try{loaded=applyIfNewer(JSON.parse(result.value));}catch(e){}
-        if(loaded){render();renderCrono();switchTab('crono');updateMvpLabel();if(typeof refreshExecEnhancements==='function')setTimeout(function(){refreshExecEnhancements();},0);return;}
-      }
-      // 2. Tentar localStorage
-      try{
-        var raw=localStorage.getItem(STORAGE_KEY);
-        if(raw){loaded=applyIfNewer(JSON.parse(raw));}
-      }catch(e){}
-      if(loaded){render();renderCrono();switchTab('crono');updateMvpLabel();if(typeof refreshExecEnhancements==='function')setTimeout(function(){refreshExecEnhancements();},0);return;}
-      // 3. Fallback: embedded-state
-      applyEmbedded();
-    }).catch(function(){
-      // Se window.storage falhar, tentar localStorage depois embedded
-      var loaded=false;
-      try{
-        var raw=localStorage.getItem(STORAGE_KEY);
-        if(raw){loaded=applyIfNewer(JSON.parse(raw));}
-      }catch(e){}
-      if(loaded){render();renderCrono();switchTab('crono');updateMvpLabel();if(typeof refreshExecEnhancements==='function')setTimeout(function(){refreshExecEnhancements();},0);return;}
-      applyEmbedded();
-    });
-    return;
-  }
-
-    // Sem window.storage: tentar localStorage depois embedded
+    // JSONBin falhou — fallback para localStorage depois embedded
     var loaded=false;
     try{
       var raw=localStorage.getItem(STORAGE_KEY);
@@ -5130,7 +5100,7 @@ function gerarGantt(){
 
 function resetData(){
   _customConfirm('Restaurar para o ponto de referência do projeto?\nTodas as alterações manuais serão desfeitas.', function(){
-    try{if(typeof window.storage!=='undefined'&&window.storage&&typeof window.storage.delete==='function'){window.storage.delete(STORAGE_KEY).catch(function(){});}}catch(e){}
+
     data=JSON.parse(JSON.stringify(DEFAULT_DATA));
     velocity=JSON.parse(JSON.stringify(DEFAULT_VEL));
     MODULES.length=0; JSON.parse(JSON.stringify(DEFAULT_MODS)).forEach(function(m){MODULES.push(m);});
