@@ -4632,23 +4632,20 @@ const STORAGE_KEY='opea_planner_state_json_layout_v3';
 // Cloudflare Worker — sincronização em nuvem
 var CLOUD_URL='https://opea-api.mandaprovitor.workers.dev';
 function syncToCloud(payload){
-  // Debounce: cancelar timer anterior e agendar novo envio em 800ms
-  if(window._jbTimer) clearTimeout(window._jbTimer);
-  window._jbTimer = setTimeout(function(){
-    window._jbTimer = null;
-    fetch(CLOUD_URL,{
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body:payload
-    }).then(function(r){
-      if(r.ok){
-        var ind=document.getElementById('save-ind');
-        if(ind){ind.textContent='☁ salvo na nuvem';ind.style.opacity='1';clearTimeout(ind._t);ind._t=setTimeout(function(){ind.style.opacity='0';},2500);}
-      } else {
-        r.text().then(function(t){console.warn('Cloud save error HTTP '+r.status+':',t);});
-      }
-    }).catch(function(e){console.warn('Cloud save failed:',e);});
-  }, 800);
+  console.log('Enviando para Cloudflare Worker...');
+  fetch(CLOUD_URL,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body:payload
+  }).then(function(r){
+    console.log('Worker resposta HTTP:', r.status);
+    if(r.ok){
+      var ind=document.getElementById('save-ind');
+      if(ind){ind.textContent='☁ salvo na nuvem';ind.style.opacity='1';clearTimeout(ind._t);ind._t=setTimeout(function(){ind.style.opacity='0';},2500);}
+    } else {
+      r.text().then(function(t){console.warn('Worker error HTTP '+r.status+':',t);});
+    }
+  }).catch(function(e){console.warn('Worker save failed:',e);});
 }
 function loadFromCloud(onSuccess,onFail){
   fetch(CLOUD_URL,{method:'GET'})
