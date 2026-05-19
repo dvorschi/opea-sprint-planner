@@ -4677,12 +4677,10 @@ function setEmbeddedState(){
 function persistState(){
   var payload=JSON.stringify(getPlannerState());
   try{localStorage.setItem(STORAGE_KEY,payload);}catch(e){}
-  try{
-
-  }catch(e){}
   setEmbeddedState();
-  // Sincronizar com JSONBin (nuvem compartilhada)
-  try{syncToCloud(payload);}catch(e){}
+  // Sincronizar com Cloudflare Worker (nuvem compartilhada)
+  console.log('persistState: chamando syncToCloud');
+  syncToCloud(payload);
 }
 function save(){
   persistState();
